@@ -1,0 +1,54 @@
+# Experiment Configuration - Planning Quality Degradation Study
+# Frozen before viewing results (as per experimental protocol)
+
+experiment:
+  name: "Planning Quality Degradation Comparative Study"
+  version: "1.0"
+  date_frozen: "2026-11-17"
+
+environment:
+  type: "MSRPB"
+  task_types:
+    - LITERATURE_SEARCH
+    - EVIDENCE_EVALUATION
+    - HYPOTHESIS_FORMATION
+    - EXPERIMENT_DESIGN
+    - DATA_ANALYSIS
+    - SYNTHESIS
+
+agents:
+  - name: "ReAct"
+    class: "ReActAgent"
+    description: "Standard reason-then-act loop (Yao et al., 2023)"
+  - name: "Reflexion"
+    class: "ReflexionAgent"
+    description: "ReAct + verbal reflection + episodic memory (Shinn et al., 2023)"
+  - name: "Hierarchical"
+    class: "HierarchicalAgent"
+    description: "Coarse-to-fine planning with subgoal decomposition"
+
+evaluation:
+  horizon_lengths: [5, 10, 15, 20, 25, 30]
+  n_tasks_per_horizon: 50
+  random_seeds: [42, 123, 456]
+  metrics:
+    primary: "goal_alignment_score"
+    secondary:
+      - "plan_validity_rate"
+      - "context_utilization_score"
+      - "error_accumulation_rate"
+      - "task_completion_rate"
+      - "recovery_rate"
+  deeper_analysis:
+    type: "ablation"
+    target: "Reflexion"
+    variants:
+      - "full"
+      - "no_memory"
+      - "no_reflection"
+      - "baseline"
+
+reproducibility:
+  python_version: "3.9+"
+  hardware: "Google Colab (T4 GPU) or CPU"
+  estimated_runtime: "~15 minutes on CPU"
